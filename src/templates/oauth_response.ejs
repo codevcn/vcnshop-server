@@ -1,0 +1,60 @@
+<div>
+    <% if (status === 'success') { %>
+
+    <div style="text-align: center; padding: 20px 0;">
+        <div style="margin: auto; background-color: white; padding: 20px; border-radius: 5px;">
+
+            <div style="border-radius: 200px; height:200px; width:200px; background: #F8FAF5; margin: 0 auto;">
+                <i style="color: #9ABC66; font-size: 100px; line-height: 200px; margin-left: -15px;">
+                    ✓
+                </i>
+            </div>
+
+            <h1
+                style="color: #88B04B; font-family: 'Nunito Sans', 'Helvetica Neue', sans-serif; font-weight: 900; font-size: 40px; margin-bottom: 10px;">
+                Success
+            </h1>
+
+            <p
+                style="color: #404F5E; font-family: 'Nunito Sans', 'Helvetica Neue', sans-serif; font-size: 20px; margin: 0;">
+                <%= message %>
+            </p>
+        </div>
+    </div>
+
+    <% } else { %>
+
+    <div style="padding-top: 20px; text-align: center; background-color: #fff;">
+        <div class="error-inner" style="font-family: 'Nunito Sans', 'Helvetica Neue', sans-serif;">
+            <h1
+                style="margin: 10px 0; font-size: 140px; text-shadow: 3px 5px 2px #3333; color: red; font-weight: 700; font-family: inherit;">
+                Fail
+            </h1>
+            <span style="display: block; font-size: 25px; color: #333; font-weight: 600; font-family: inherit;">
+                Something went wrong...
+            </span>
+            <p style="font-family: inherit;">
+                <%= message %>
+            </p>
+        </div>
+    </div>
+
+    <% } %>
+
+    <% if (access_token) { %>
+
+    <script>
+        let data = {
+            id: 'POST_MESSAGE_ID-12345',
+            status: '<%= status %>',
+            status: '<%= message %>',
+            access_token: '<%= access_token %>',
+        }
+
+        window.onload = e => {
+            window.opener.postMessage(JSON.stringify(data), 'http://localhost:3000')
+        }
+    </script>
+
+    <% } %>
+</div>

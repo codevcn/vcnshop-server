@@ -1,0 +1,110 @@
+<div style="width: 100%; padding: 15px; box-sizing: border-box; ">
+    <h2 style="font-family: Arial, Helvetica, sans-serif; margin: 5px 0; ">
+        Payment Receipt
+    </h2>
+    <div style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; ">
+        <%= 'ID: ' + paymentInfo.id %>
+    </div>
+    <div style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; margin-top: 5px; ">
+        From:
+    </div>
+    <div style="display: flex; width: 100%; margin-top: 10px; ">
+        <img src="https://res.cloudinary.com/doe8ogwij/image/upload/v1686151081/system/logo_app_black_wm8fy4.jpg"
+            style="height: 70px; margin: auto; ">
+    </div>
+    <h2
+        style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; font-weight: bold; width: 100%; text-align: center; ">
+        VCN Shop - Fox COR Inc
+    </h2>
+    <div style="width: 100%; height: 1px; background-color: gray; "></div>
+    <div style="display: flex; justify-content: space-between; column-gap: 10px; margin-top: 15px; ">
+        <div style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: gray; width: 50%; ">
+            <h2 style="font-family: Arial, Helvetica, sans-serif; margin: 10px 0 5px;">
+                Receiver Info
+            </h2>
+            <div><%= 'Email: ' + receiverInfo.email %></div>
+            <div><%= 'Phone: +' + shippingInfo.phone_number %></div>
+            <div><%= 'Paid On: ' + paymentInfo.method %></div>
+            <div><%= 'Paid At: ' + paidAt %></div>
+        </div>
+        <div style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; width: 50%; color: gray; ">
+            <h2 style="font-family: Arial, Helvetica, sans-serif; margin: 10px 0 5px;">
+                Delivery Info
+            </h2>
+            <div><%= 'Address: ' + shippingInfo.address %></div>
+            <div><%= 'Shipping Method: ' + shippingInfo.method %></div>
+        </div>
+    </div>
+    <h2 style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; font-weight: bold; margin: 15px 0 2px;">
+        Items:
+    </h2>
+    <table style="width: 99%; border-collapse: collapse;">
+        <tbody>
+            <tr style="font-family: Arial, Helvetica, sans-serif; font-size: 12px;">
+                <th style="background-color: lightgrey; width: 65%; padding: 3px; border: 1px gray solid;">
+                    Item
+                </th>
+                <th style="background-color: lightgrey; width: 14%; padding: 3px; border: 1px gray solid;">
+                    Quantity
+                </th>
+                <th style="background-color: lightgrey; width: 20%; padding: 3px; border: 1px gray solid;">
+                    Subtotal (USD)
+                </th>
+            </tr>
+
+            <% for(let item of items){ %>
+            <tr style="font-family: Arial, Helvetica, sans-serif; font-size: 12px;">
+                <th style="padding: 3px; padding: 3px; border: 1px gray solid; font-weight: normal;">
+                    <%= item.name %>
+                </th>
+                <th style="padding: 3px; padding: 3px; border: 1px gray solid; font-weight: normal;">
+                    <%= item.quantity %>
+                </th>
+                <th style="padding: 3px; padding: 3px; border: 1px gray solid; font-weight: normal;">
+                    <%= item.price %>
+                </th>
+            </tr>
+            <% } %>
+
+            <tr style="font-family: Arial, Helvetica, sans-serif; font-size: 12px;">
+                <th colspan="2"
+                    style="padding: 3px; background-color: lightgrey; font-size: 14px; border: 1px gray solid; font-weight: normal;">
+                    Shipping Fee
+                </th>
+                <th style="padding: 3px; background-color: lightgrey; border: 1px gray solid; font-weight: normal;">
+                    <%= shippingFee %>
+                </th>
+            </tr>
+            <tr style="font-family: Arial, Helvetica, sans-serif; font-size: 12px;">
+                <th colspan="2"
+                    style="padding: 3px; background-color: lightgrey; font-size: 14px; border: 1px gray solid; font-weight: normal;">
+                    Tax Fee
+                </th>
+                <th style="padding: 3px; background-color: lightgrey; border: 1px gray solid; font-weight: normal;">
+                    <%= taxFee %>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+    <div style="display: flex; column-gap: 5px; padding: 0 5px; margin-top: 5px; box-sizing: border-box;">
+        <div style="font-family: Arial, Helvetica, sans-serif; font-size: 20px;">
+            Total:
+        </div>
+        <div style="font-family: Arial, Helvetica, sans-serif; font-size: 20px;">
+            <%= totalToPay + ' USD' %>
+        </div>
+    </div>
+    <div
+        style="text-align: center; font-family: Arial, Helvetica, sans-serif; margin-top: 10px; font-size: 15px; text-decoration: underline;">
+        <%= 'Generated On ' + generatedOn %>
+    </div>
+    <div style="margin-top: 20px; text-align: center;">
+        Thank for shopping with us. If you have any questions, you always can contact to us via email below.
+    </div>
+    <div style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; margin-top: 10px; text-align: center;">
+        <%= 'Website: ' + company_info.website %>
+    </div>
+    <div style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; margin-top: 5px; text-align: center;">
+        <%= 'Email: ' + company_info.email %>
+    </div>
+</div>

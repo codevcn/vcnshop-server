@@ -1,0 +1,31 @@
+<div
+    style="font-family: Helvetica,Arial,sans-serif; width: 100%; display: flex; justify-content: center; flex-direction: column; align-items: center; box-sizing: border-box; padding: 10px; ">
+    <div>
+        <div style="border-bottom: 1px solid lightgray; padding: 5px 0 15px; font-size: 1.4em; font-weight: bold;">
+            <%= company_info.name + ' - OTP verification' %>
+        </div>
+        <p style="font-size: 1.1em;">Hi,</p>
+        <p style="font-size: 0.9em;">
+            <span>Thank you for choosing</span>
+            <span><%= company_info.name %></span>
+            <span>. Use the following OTP to complete your register procedures. OTP is valid for </span>
+            <span><%= OTP_expire_in_minute %></span>
+            <span> minutes.</span>
+        </p>
+        <h2
+            style="background-color: cadetblue; margin: 0 auto; width: fit-content; padding: 5px 10px; color: white; border-radius: 4px; ">
+            <%= OTP_code %>
+        </h2>
+        <p style="font-size: 0.9em; ">
+            <span>Regards,</span>
+            <br />
+            <span><%= company_info.name %></span>
+        </p>
+        <hr style="border: none; border-top: 1px solid lightgray; " />
+        <div style="font-size: 0.8em; ">
+            <p><%= company_info.name %></p>
+            <p><%= company_info.address %></p>
+            <p><%= company_info.country %></p>
+        </div>
+    </div>
+</div>

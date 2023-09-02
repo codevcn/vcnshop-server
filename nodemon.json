@@ -1,0 +1,6 @@
+{
+    "watch": [
+        "./backend/"
+    ],
+    "ext": "mjs js ejs"
+}
