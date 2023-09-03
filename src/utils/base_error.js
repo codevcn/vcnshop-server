@@ -15,7 +15,9 @@ class BaseError extends Error {
         // status error includes errors such as: register timing out, user with the email existed in database, etc
         this.isUserError = isUserError
 
-        Error.captureStackTrace(this)
+        // because Node.js is a JavaScript runtime built on the V8 JavaScript engine
+        // and captureStackTrace method is only available on V8, this code will work
+        Error.captureStackTrace(this, BaseError)
     }
 }
 

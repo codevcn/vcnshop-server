@@ -8,7 +8,7 @@ import fileUpload from 'express-fileupload'
 import initRoutes from './routes/routes.js'
 import connectMongoDB from './configs/connectDB.js'
 import morgan from 'morgan'
-import { streamToLogger }from './utils/loggers.js'
+import logger from './utils/logger.js'
 
 //connect to database
 connectMongoDB()
@@ -17,8 +17,7 @@ const app = express()
 
 //block requests from a origin is different with own origin
 app.use(cors({
-    //>>> fix this: change orgin
-    origin: 'http://localhost:3000',
+    origin: 'https://vcnshop.vercel.app',
     credentials: true,
 }))
 
@@ -34,7 +33,7 @@ app.use(cookieParser())
 app.use(fileUpload())
 
 //morgan
-app.use(morgan(':remote-addr :method :status :url :res[content-length] - :response-time ms', { stream: streamToLogger }))
+app.use(morgan(':remote-addr :method :status :url :res[content-length] - :response-time ms', { stream: logger.streamToLogger() }))
 
 //create app routes
 initRoutes(app)

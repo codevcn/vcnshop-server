@@ -1,6 +1,7 @@
 
 import 'dotenv/config'
 import app from "./app.js"
+import logger from './utils/logger.js'
 
 const { PORT } = process.env || 8080
 
@@ -10,16 +11,25 @@ const server = app.listen(PORT, () => {
 
 process.on('unhandledRejection', (reason, promise) => {
     console.log('>>> UNHANDLED REJECTION !!!')
-    console.log('>>> Reason >>>', reason)
-    console.log('>>> Promise >>>', promise)
+
+    logger.error({
+        message: reason.message,
+        label: logger.labels.UNHANDLED_REJECTION,
+        trace: reason.stack,
+    })
+
     process.exit(1)
 })
 
 //process error
 process.on("uncaughtException", (error) => {
     console.log(">>> UNCAUGHT EXCEPTION !!!")
-    console.log('>>> Error message >>>', error.message)
-    console.log('>>> Error name >>>', error.name)
-    console.log(">>> Error >>>", error)
+
+    logger.error({
+        message: error.message,
+        label: logger.labels.UNCAUGHT_EXCEPTION,
+        trace: error.stack,
+    })
+    
     process.exit(1)
 })

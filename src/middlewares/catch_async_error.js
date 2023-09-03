@@ -1,6 +1,5 @@
 import BaseError from "../utils/base_error.js"
-import { errorLogger } from "../utils/loggers.js"
-import { loggingLabels } from "../configs/winston.js"
+import logger from "../utils/logger.js"
 
 const catchAsyncError = (asyncFunction) => {
     return (req, res, next) => {
@@ -8,9 +7,17 @@ const catchAsyncError = (asyncFunction) => {
 
             // this is to log errors
             if (error instanceof BaseError) {
-                errorLogger.error({ message: error.message, label: loggingLabels.Base_Error })
+                logger.error({
+                    message: error.message,
+                    label: logger.labels.Caught_Error,
+                    trace: error.stack,
+                })
             } else {
-                errorLogger.error({ message: error.message, label: loggingLabels.Async_Error })
+                logger.error({
+                    message: error.message,
+                    label: logger.labels.Async_Error,
+                    trace: error.stack,
+                })
             }
 
             next(error)

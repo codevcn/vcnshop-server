@@ -1,4 +1,4 @@
-
+import winston, { format } from 'winston'
 import { Loggly } from 'winston-loggly-bulk'
 
 const loggingLevels = {
@@ -21,13 +21,41 @@ const logglyTransport = new Loggly({
 const loggingLabels = {
     Input_Validation_Error: 'Input Validation Error',
     Async_Error: 'Async Error',
-    Base_Error: 'Base Error',
+    Caught_Error: 'Caught Error',
     HTTP: 'HTTP Request',
     UNHANDLED_REJECTION: 'Unhandled Rejection',
+    UNCAUGHT_EXCEPTION: 'Uncaught Exception',
 }
+
+const errorLogger = winston.createLogger({
+    transports: [
+        logglyTransport,
+    ],
+    format: format.combine(
+        format.timestamp(),
+        format.json(),
+    ),
+    levels: loggingLevels,
+    level: 'error',
+})
+
+const httpLogger = winston.createLogger({
+    transports: [
+        logglyTransport,
+    ],
+    format: format.combine(
+        format.timestamp(),
+        format.json(),
+        format.label({ label: loggingLabels.HTTP, message: false })
+    ),
+    levels: loggingLevels,
+    level: 'http',
+})
 
 export {
     loggingLevels,
     logglyTransport,
     loggingLabels,
+    errorLogger,
+    httpLogger,
 }

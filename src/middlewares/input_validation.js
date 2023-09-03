@@ -8,8 +8,7 @@ import {
 import BaseError from '../utils/base_error.js'
 import errorMessage from '../configs/error_messages.js'
 import validator from 'validator'
-import { errorLogger } from '../utils/loggers.js'
-import { loggingLabels } from '../configs/winston.js'
+import logger from '../utils/logger.js'
 
 const checkExpressValidator = (req) => {
     let result = validationResult(req)
@@ -30,7 +29,11 @@ const checkValidation = (req, res, next) => {
     try {
         checkExpressValidator(req)
     } catch (error) {
-        errorLogger.error({ message: error.message, label: loggingLabels.Input_Validation_Error })
+        logger.error({
+            message: error.message,
+            label: logger.labels.Input_Validation_Error,
+            trace: error.stack,
+        })
 
         return next(error)
     }
