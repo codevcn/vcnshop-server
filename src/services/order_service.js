@@ -3,8 +3,7 @@ import BaseError from "../utils/base_error.js"
 import Stripe from "stripe"
 import { sendReceiptViaEmail } from '../utils/send_mail.js'
 import mongoose from "mongoose"
-import ProductModel from "../models/product_model.js"
-import moment from "moment"
+import productService from "./product_service.js"
 import errorMessage from "../configs/error_messages.js"
 
 const { STRIPE_SECRET_KEY, STRIPE_PUBLIC_KEY } = process.env
@@ -92,20 +91,7 @@ class OrderService {
             { runValidators: true }
         )
 
-        let bulkOps = order.items_of_order.map(({ _id, quantity }) => ({
-            updateOne: {
-                filter: { _id: _id },
-                update: {
-                    $inc: {
-                        'stock': -quantity,
-                        'sold.count': quantity,
-                    },
-                    'sold.is_sold_last_time': moment()
-                }
-            }
-        }))
-
-        await ProductModel.bulkWrite(bulkOps)
+        await productService.setProductAfterPlaceOrder(order.items_of_order)
     }
 
     async sendReceipt(paymentId, email) {

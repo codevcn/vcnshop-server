@@ -2,8 +2,9 @@ import ProductModel from '../models/product_model.js'
 import BaseError from "../utils/base_error.js"
 import mongoose from "mongoose"
 import imageUploader from '../utils/image_uploader.js'
-import ShopModel from '../models/shop_model.js'
+import shopService from './shop_service.js'
 import errorMessage from '../configs/error_messages.js'
+import moment from "moment"
 
 class ProductService {
 
@@ -15,7 +16,7 @@ class ProductService {
             product_id,
         )
 
-        await ProductModel.create({
+        let product = await ProductModel.create({
             '_id': product_id,
             'image_link': image_urls[0],
             'images': image_urls,
@@ -36,18 +37,12 @@ class ProductService {
             'description': JSON.parse(description.slice(0, 500)),
         })
 
-        await ShopModel.updateOne(
-            { '_id': shop.id },
-            {
-                $push: {
-                    'products.ids': {
-                        $each: [product_id],
-                        $position: 0,
-                    }
-                }
-            },
-            { runValidators: true }
-        )
+        await shopService.addProductId({
+            shop_id: shop.id,
+            product_id,
+        })
+
+        return product
     }
 
     async updateProduct({ images, productId, sizes, colors, stock, description }) {
@@ -88,11 +83,19 @@ class ProductService {
             }
         }
 
-        await ProductModel.updateOne(
+        let product = await ProductModel.findOneAndUpdate(
             { '_id': productId },
             { $set: update_format },
-            { runValidators: true }
+            {
+                runValidators: true,
+                new: true,
+                projection: {
+                    'review.reviews': 0
+                }
+            },
         )
+
+        return product
     }
 
     async deleteProduct(productId) {
@@ -255,16 +258,33 @@ class ProductService {
 
     async checkProducts(products, shop_id) {
         if (!shop_id) return
-        
+
         let ids = products.map(({ _id }) => _id)
 
         let existedInOwnerShop = await this.countProducts({
             '_id': { $in: ids },
             'shop.id': shop_id,
         })
-        
+
         if (existedInOwnerShop)
             throw new BaseError("You can't pay for your own product", 400)
+    }
+
+    async setProductAfterPlaceOrder(items_of_order) {
+        let bulkOps = items_of_order.map(({ _id, quantity }) => ({
+            updateOne: {
+                filter: { _id: _id },
+                update: {
+                    $inc: {
+                        'stock': -quantity,
+                        'sold.count': quantity,
+                    },
+                    'sold.is_sold_last_time': moment()
+                }
+            }
+        }))
+
+        await ProductModel.bulkWrite(bulkOps)
     }
 
 }

@@ -23,7 +23,7 @@ const createProduct = async (req, res, next) => {
     if (!imageUploader.checkFilesExists(files, 'images'))
         throw new BaseError(errorMessage.INVALID_INPUT, 400)
 
-    await productService.createProduct({
+    let product = await productService.createProduct({
         productName,
         category,
         targetGender,
@@ -36,7 +36,7 @@ const createProduct = async (req, res, next) => {
         images: files.images
     })
 
-    res.status(200).json({ success: true })
+    res.status(200).json({ product })
 }
 
 const updateProduct = async (req, res, next) => {
@@ -59,7 +59,7 @@ const updateProduct = async (req, res, next) => {
     if (!images && size_is_empty && color_is_empty && stock_is_empty && description_is_empty && productId_is_empty)
         throw new BaseError(errorMessage.INVALID_INPUT, 400)
 
-    await productService.updateProduct({
+    let product = await productService.updateProduct({
         images,
         productId: productId_is_empty ? null : productId,
         sizes: size_is_empty ? null : sizes,
@@ -68,7 +68,7 @@ const updateProduct = async (req, res, next) => {
         description: description_is_empty ? null : description,
     })
 
-    res.status(200).json({ success: true })
+    res.status(200).json({ product })
 }
 
 const deleteProduct = async (req, res, next) => {

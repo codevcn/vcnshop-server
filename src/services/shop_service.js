@@ -46,13 +46,28 @@ class ShopService {
 
     async getShopsByAdmin(fields_set) {
         let format = {}
-        
+
         for (let key of Object.keys(fields_set))
             format[key] = 1
 
         let list = await ShopModel.find({}, format)
 
         return list
+    }
+
+    async addProductId({ shop_id, product_id }) {
+        await ShopModel.updateOne(
+            { '_id': shop_id },
+            {
+                $push: {
+                    'products.ids': {
+                        $each: [product_id],
+                        $position: 0,
+                    }
+                }
+            },
+            { runValidators: true }
+        )
     }
 
 }

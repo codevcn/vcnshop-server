@@ -9,8 +9,7 @@ const cookie_options = {
     maxAge: JWT_TOKEN_MAX_AGE_IN_HOUR * 3600000,
     path: '/',
     httpOnly: true,
-    //>>> fix this: change domain
-    domain: 'localhost',
+    domain: 'vcnshop.vercel.app',
 }
 
 const getJWTToken = (userId) => {
