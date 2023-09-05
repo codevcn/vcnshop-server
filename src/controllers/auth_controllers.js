@@ -64,7 +64,7 @@ const completeRegister = async (req, res, next) => {
 
 const loginUser = async (req, res, next) => {
     let { email, password } = req.body
-
+    console.log('>>> req.host >>>', req.hostname)
     let user_id = await authService.loginUser(email, password)
 
     sendJWTToken(res, user_id)
