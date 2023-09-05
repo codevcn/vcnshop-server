@@ -17,7 +17,7 @@ const app = express()
 
 //block requests from a origin is different with own origin
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'https://vcnshop.vercel.app',
     credentials: true,
 }))
 
