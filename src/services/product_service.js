@@ -98,8 +98,10 @@ class ProductService {
         return product
     }
 
-    async deleteProduct(productId) {
-        return await ProductModel.deleteOne({ '_id': productId })
+    async deleteProduct({ shop_id, product_id }) {
+        await ProductModel.deleteOne({ '_id': product_id })
+
+        await shopService.deleteProduct({ shop_id, product_id })
     }
 
     async getProduct(productId) {

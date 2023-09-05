@@ -4,6 +4,7 @@ import {
     loginUser, forgotPassword, resetPassword,
     logoutUser, googleOauth, signInWithGoogle,
     getGoogleOAuthInfo,
+    callAPIFromHosting,
 } from '../controllers/auth_controllers.js'
 import {
     checkEmptyFieldsInBody,
@@ -72,5 +73,7 @@ router.get('/oauth/googleAuthorization', checkEmptyFieldsInQuery('code', 'state'
 router.post('/googleSignIn', checkEmptyFieldsInBody('access_token'), checkValidation, catchAsyncError(signInWithGoogle))
 
 router.get('/getGoogleOAuthInfo', catchAsyncError(getGoogleOAuthInfo))
+
+router.get('/heathcheck', callAPIFromHosting)
 
 export default router

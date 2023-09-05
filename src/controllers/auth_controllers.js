@@ -91,9 +91,18 @@ const resetPassword = async (req, res, next) => {
     res.status(200).json({ success: true })
 }
 
+// prevent Render.com from sleeping
+const callAPIFromHosting = async (req, res, next) => {
+    res.status(200).json({
+        success: true,
+        message: 'Response from VCN-Server',
+    })
+}
+
 export {
     googleOauth, signInWithGoogle,
     sendRegisterOTP, verifyOTP, completeRegister,
     loginUser, logoutUser, getGoogleOAuthInfo,
     forgotPassword, resetPassword,
+    callAPIFromHosting,
 }

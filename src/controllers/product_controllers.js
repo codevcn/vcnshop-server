@@ -73,8 +73,12 @@ const updateProduct = async (req, res, next) => {
 
 const deleteProduct = async (req, res, next) => {
     let { productId } = req.params
+    let shop_id = req.user.shop.id
 
-    await productService.deleteProduct(productId)
+    await productService.deleteProduct({
+        product_id: productId,
+        shop_id,
+    })
 
     res.status(200).json({ success: true })
 }

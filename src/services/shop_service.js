@@ -70,6 +70,17 @@ class ShopService {
         )
     }
 
+    async deleteProduct({ shop_id, product_id }) {
+        await ShopModel.updateOne(
+            { _id: shop_id },
+            {
+                $pull: {
+                    'products': product_id,
+                }
+            }
+        )
+    }
+
 }
 
 const shopService = new ShopService()
