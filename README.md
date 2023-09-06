@@ -1,1 +1,29 @@
-# A codevcn mearn ecommerce project
+# MERN Stack E-ecomerce (Backend)
+
+## Referrence
+
+https://github.com/meabhisingh/mernProjectEcommerce
+
+## Stack
+
+- Express
+- Mongoose
+- Nodemailer
+- Ejs
+- JWT
+- Express-validator
+- Stripe
+- Winston
+- Cloudinary
+
+## Install
+
+```shell
+npm i
+```
+
+## Running
+
+```shell
+npm start
+```

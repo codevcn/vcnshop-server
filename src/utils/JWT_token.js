@@ -9,7 +9,7 @@ const cookie_options = {
     maxAge: JWT_TOKEN_MAX_AGE_IN_HOUR * 3600000,
     path: '/',
     httpOnly: true,
-    domain: 'vcnshop.vercel.app',
+    domain: 'vcnshop-server.onrender.com',
 }
 
 const getJWTToken = (userId) => {
