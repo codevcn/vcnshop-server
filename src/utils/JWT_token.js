@@ -5,30 +5,38 @@ const {
     JWT_SECRET_KEY,
 } = process.env
 
-const cookie_options = {
-    maxAge: JWT_TOKEN_MAX_AGE_IN_HOUR * 3600000,
-    path: '/',
-    httpOnly: true,
-    domain: '.vercel.app',
-    secure: true,
+class JWTToken {
+    cookie_options = {
+        maxAge: JWT_TOKEN_MAX_AGE_IN_HOUR * 3600000,
+        path: '/',
+        httpOnly: true,
+        domain: 'vercel.app',
+        secure: true,
+    };
+
+    getToken(userId) {
+        let payload = { userId }
+        let token = jwt.sign(payload, JWT_SECRET_KEY, { 'expiresIn': JWT_TOKEN_MAX_AGE_IN_HOUR + 'h' })
+        return token
+    }
+
+    sendToken(res, userId) {
+        let JWT_token = this.getJWTToken(userId)
+
+        res.cookie('JWT_token', JWT_token, this.cookie_options)
+    }
+
+    removeToken(res) {
+        res.clearCookie(
+            'JWT_token',
+            {
+                domain: this.cookie_options.domain,
+                path: this.cookie_options.path,
+            }
+        )
+    }
 }
 
-const getJWTToken = (userId) => {
-    let payload = { userId }
-    let token = jwt.sign(payload, JWT_SECRET_KEY, { 'expiresIn': JWT_TOKEN_MAX_AGE_IN_HOUR + 'h' })
-    return token
-}
+const jwtToken = new JWTToken()
 
-const sendJWTToken = (res, user_id) => {
-    let JWT_token = getJWTToken(user_id)
-
-    res.cookie('JWT_token', JWT_token, cookie_options)
-}
-
-const removeJWTToken = (res) => {
-    res.clearCookie('JWT_token', { domain: cookie_options.domain, path: cookie_options.path })
-}
-
-export {
-    sendJWTToken, removeJWTToken, getJWTToken,
-}
+export default jwtToken

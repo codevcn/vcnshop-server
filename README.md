@@ -22,7 +22,7 @@ https://github.com/meabhisingh/mernProjectEcommerce
 npm i
 ```
 
-## Running
+## Run
 
 ```shell
 npm start

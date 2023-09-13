@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 import moment from 'moment'
-import { getOTPHtmlString, getReceiptHtmlString } from './html_string_handlers.js'
+import htmlStringHanlder from './html_string_handlers.js'
 import ProjectInfo from '../configs/project_info.js'
 
 const { GMAIL_USERNAME, GMAIL_PASSWORD } = process.env
@@ -14,54 +14,57 @@ const transporter = nodemailer.createTransport({
     },
 })
 
-const sendOTPViaEmail = async (OTP_code, OTP_expire_in_minute, receiver, subject) => {
-    let html_to_send = await getOTPHtmlString(ProjectInfo, OTP_expire_in_minute, OTP_code)
+class SendMailHanlder {
+    #transporter = transporter;
 
-    await transporter.sendMail({
-        from: `"VCN Shop" <${GMAIL_USERNAME}>`,
-        to: receiver,
-        subject: subject,
-        text: 'This is your OTP code: ' + OTP_code + '. If you have not requested this email then, please ignore it.',
-        html: html_to_send,
-    })
-}
+    async sendOTPViaEmail({ OTP_code, OTP_expire_in_minute, receiver, subject }) {
+        let html_to_send = await htmlStringHanlder.getOTPHtmlString(ProjectInfo, OTP_expire_in_minute, OTP_code)
 
-const sendReceiptViaEmail = async (
-    receiver,
-    subject,
-    {
-        paymentInfo,
-        shippingInfo,
-        receiverInfo,
-        items,
-        shippingFee,
-        taxFee,
-        totalToPay,
-        createdAt,
+        await this.#transporter.sendMail({
+            from: `"VCN Shop" <${GMAIL_USERNAME}>`,
+            to: receiver,
+            subject: subject,
+            text: 'This is your OTP code: ' + OTP_code + '. If you have not requested this email then, please ignore it.',
+            html: html_to_send,
+        })
     }
-) => {
-    let generatedOn = moment().format("MMMM Do YYYY")
-    let paidAt = moment(createdAt).format('MMMM Do YYYY, h:mm a')
 
-    let html_to_send = await getReceiptHtmlString({
-        paymentInfo,
-        shippingInfo,
-        receiverInfo,
-        items,
-        shippingFee,
-        taxFee,
-        totalToPay,
-        generatedOn,
-        paidAt,
-        company_info: ProjectInfo,
-    })
+    async sendReceiptViaEmail(
+        receiver,
+        subject,
+        {
+            paymentInfo,
+            shippingInfo,
+            receiverInfo,
+            items,
+            shippingFee,
+            taxFee,
+            totalToPay,
+            createdAt,
+        }
+    ) {
+        let generatedOn = moment().format("MMMM Do YYYY")
+        let paidAt = moment(createdAt).format('MMMM Do YYYY, h:mm a')
 
-    await transporter.sendMail({
-        from: `"VCN Shop" <${GMAIL_USERNAME}>`,
-        to: receiver,
-        subject: subject,
-        text:
-            `
+        let html_to_send = await htmlStringHanlder.getReceiptHtmlString({
+            paymentInfo,
+            shippingInfo,
+            receiverInfo,
+            items,
+            shippingFee,
+            taxFee,
+            totalToPay,
+            generatedOn,
+            paidAt,
+            company_info: ProjectInfo,
+        })
+
+        await this.#transporter.sendMail({
+            from: `"VCN Shop" <${GMAIL_USERNAME}>`,
+            to: receiver,
+            subject: subject,
+            text:
+                `
                 Payment Receipt:\n
                 \nID: ${paymentInfo.id}
                 \nAddress: ${shippingInfo.address}
@@ -75,10 +78,11 @@ const sendReceiptViaEmail = async (
                 \nTotal To Pay: ${totalToPay}
                 \nGenerated On: ${generatedOn}
             `,
-        html: html_to_send,
-    })
+            html: html_to_send,
+        })
+    }
 }
 
-export {
-    sendOTPViaEmail, sendReceiptViaEmail,
-}
+const sendMailHanlder = new SendMailHanlder()
+
+export default sendMailHanlder

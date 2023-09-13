@@ -1,7 +1,7 @@
 import OrderModel from "../models/order_model.js"
 import BaseError from "../utils/base_error.js"
 import Stripe from "stripe"
-import { sendReceiptViaEmail } from '../utils/send_mail.js'
+import sendMailHanlder from '../utils/send_mail.js'
 import mongoose from "mongoose"
 import productService from "./product_service.js"
 import errorMessage from "../configs/error_messages.js"
@@ -98,7 +98,7 @@ class OrderService {
         let order = await OrderModel.findOne({ 'payment_info.id': paymentId }).lean()
         if (!order) throw new BaseError(errorMessage.ORDER_NOT_FOUND, 404)
 
-        await sendReceiptViaEmail(
+        await sendMailHanlder.sendReceiptViaEmail(
             email,
             'Receipt Of Payment ' + paymentId,
             {

@@ -9,8 +9,8 @@ import errorMessage from "../configs/error_messages.js"
 import UserModel from "../models/user_model.js"
 import crypto from 'crypto'
 import TokenModel from "../models/token_model.js"
-import { getOAuthHtmlString } from '../utils/html_string_handlers.js'
-import { sendOTPViaEmail } from '../utils/send_mail.js'
+import htmlStringHanlder from '../utils/html_string_handlers.js'
+import sendMailHanlder from '../utils/send_mail.js'
 import moment from 'moment'
 
 const {
@@ -42,12 +42,12 @@ class AuthService {
         try {
             tokens = await this.getTokens(auth_token, state_token)
         } catch (error) {
-            html_string = await getOAuthHtmlString('fail', error.message)
+            html_string = await htmlStringHanlder.getOAuthHtmlString('fail', error.message)
             status = 500
             return { html_string, status }
         }
 
-        html_string = await getOAuthHtmlString(
+        html_string = await htmlStringHanlder.getOAuthHtmlString(
             'success',
             'Login successful! You may close this window now.',
             tokens.access_token,
@@ -163,7 +163,12 @@ class AuthService {
         let OTP_code = user_instance.getOTPCode()
         let OTP_expire_in_minute = 5
 
-        await sendOTPViaEmail(OTP_code, OTP_expire_in_minute, email, 'VCN Shop - Verify OTP For Register ✔', false)
+        await sendMailHanlder.sendOTPViaEmail({
+            OTP_code,
+            OTP_expire_in_minute,
+            receiver: email,
+            subject: 'VCN Shop - Verify OTP For Register ✔',
+        })
 
         await UserModel.updateOne(
             { email },
@@ -271,7 +276,12 @@ class AuthService {
         let OTP_code = user_instance.getOTPCode()
         let OTP_expire_in_minute = 5
 
-        await sendOTPViaEmail(OTP_code, OTP_expire_in_minute, email, 'VCN Shop - Verify OTP For Forgot Password ✔')
+        await sendMailHanlder.sendOTPViaEmail({
+            OTP_code,
+            OTP_expire_in_minute,
+            receiver: email,
+            subject: 'VCN Shop - Verify OTP For Forgot Password ✔',
+        })
 
         await UserModel.updateOne(
             { email },

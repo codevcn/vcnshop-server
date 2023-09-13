@@ -1,5 +1,5 @@
 
-import { removeJWTToken, sendJWTToken } from '../utils/JWT_token.js'
+import jwtToken from '../utils/JWT_token.js'
 import authService from '../services/auth_service.js'
 
 // get parameters for google oauth url
@@ -25,13 +25,13 @@ const signInWithGoogle = async (req, res, next) => {
 
     let user_id = await authService.signInWithGoogle(access_token)
 
-    sendJWTToken(res, user_id)
+    jwtToken.sendToken(res, user_id)
 
     res.status(200).json({ success: true })
 }
 
 const logoutUser = async (req, res, next) => {
-    removeJWTToken(res)
+    jwtToken.removeToken(res)
 
     res.status(200).json({ success: true })
 }
@@ -57,17 +57,17 @@ const completeRegister = async (req, res, next) => {
 
     let user_id = await authService.completeRegister(name, email, password, gender)
 
-    sendJWTToken(res, user_id)
+    jwtToken.sendToken(res, user_id)
 
     res.status(200).json({ success: true })
 }
 
 const loginUser = async (req, res, next) => {
     let { email, password } = req.body
-    console.log('>>> req.host >>>', req.hostname)
+
     let user_id = await authService.loginUser(email, password)
 
-    sendJWTToken(res, user_id)
+    jwtToken.sendToken(res, user_id)
 
     res.status(200).json({ success: true })
 }
@@ -86,7 +86,7 @@ const resetPassword = async (req, res, next) => {
 
     let user_id = await authService.resetPassword(email, newPassword)
 
-    sendJWTToken(res, user_id)
+    jwtToken.sendToken(res, user_id)
 
     res.status(200).json({ success: true })
 }
