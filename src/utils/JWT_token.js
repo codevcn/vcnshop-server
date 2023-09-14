@@ -21,7 +21,7 @@ class JWTToken {
     }
 
     sendToken(res, userId) {
-        let JWT_token = this.getJWTToken(userId)
+        let JWT_token = this.getToken(userId)
 
         res.cookie('JWT_token', JWT_token, this.cookie_options)
     }
