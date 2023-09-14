@@ -10,7 +10,6 @@ class JWTToken {
         maxAge: JWT_TOKEN_MAX_AGE_IN_HOUR * 3600000,
         path: '/',
         httpOnly: true,
-        domain: 'vercel.app',
         secure: true,
     };
 
