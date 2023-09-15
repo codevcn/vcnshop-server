@@ -8,7 +8,7 @@ const {
 class JWTToken {
     cookie_options = {
         maxAge: JWT_TOKEN_MAX_AGE_IN_HOUR * 3600000,
-        domain: 'vcn-testing.onrender.com',
+        domain: 'vcnshop-server.onrender.com',
         path: '/',
         httpOnly: true,
         secure: true,
