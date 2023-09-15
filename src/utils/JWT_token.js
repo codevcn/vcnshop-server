@@ -8,9 +8,11 @@ const {
 class JWTToken {
     cookie_options = {
         maxAge: JWT_TOKEN_MAX_AGE_IN_HOUR * 3600000,
+        domain: 'vcn-testing.onrender.com',
         path: '/',
         httpOnly: true,
         secure: true,
+        sameSite: 'none',
     };
 
     getToken(userId) {
@@ -28,10 +30,7 @@ class JWTToken {
     removeToken(res) {
         res.clearCookie(
             'JWT_token',
-            {
-                domain: this.cookie_options.domain,
-                path: this.cookie_options.path,
-            }
+            this.cookie_options
         )
     }
 }
